@@ -1,12 +1,12 @@
 <template>
   <form class="loginForm" @submit="checkForm">
     <div class="form-group">
-      <p v-if="errors.length">
+      <div v-if="errors.length">
         <b>Пожалуйста исправьте указанные ошибки:</b>
         <ul>
-      <li v-for="error in errors">{{ error }}</li>
+          <li v-for="error in errors" :key="error.id">{{ error }}</li>
         </ul>
-      </p>
+      </div>
 
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
@@ -77,7 +77,6 @@
             id="loginemail"
             class="form-control"
             type="email"
-            
             v-model="email"
             name="email"
           />
@@ -116,7 +115,6 @@
             id="loginpass"
             class="form-control"
             type="password"
-            
             v-model="userPassword"
             name="userPassword"
           />
@@ -159,12 +157,19 @@ export default {
       userNumber: null,
       userPassword: null,
       userConfirmPassword: null
-      
     };
   },
   methods: {
     checkForm: function(e) {
-      if (this.firstName && this.age && this.secondName && this.email && this.userNumber && this.userPassword && (this.userPassword == this.userConfirmPassword)) {
+      if (
+        this.firstName &&
+        this.age &&
+        this.secondName &&
+        this.email &&
+        this.userNumber &&
+        this.userPassword &&
+        this.userPassword == this.userConfirmPassword
+      ) {
         return true;
       }
 
@@ -176,19 +181,19 @@ export default {
       if (!this.age) {
         this.errors.push("Требуется указать возраст.");
       }
-      if(!this.secondName) {
-        this.errors.push ("Требуется указать фамилию.");
+      if (!this.secondName) {
+        this.errors.push("Требуется указать фамилию.");
       }
-      if(!this.email) {
-        this.errors.push ("Требуется указать почтовый адрес.");
+      if (!this.email) {
+        this.errors.push("Требуется указать почтовый адрес.");
       }
-      if(!this.userNumber) {
-        this.errors.push ("Требуется указать номер телефона.");
+      if (!this.userNumber) {
+        this.errors.push("Требуется указать номер телефона.");
       }
-      if(!this.userPassword) {
-        this.errors.push ("Требуется указать пароль.");
+      if (!this.userPassword) {
+        this.errors.push("Требуется указать пароль.");
       }
-      if(this.userPassword !== this.userConfirmPassword) {
+      if (this.userPassword !== this.userConfirmPassword) {
         this.errors.push("Пароли не совпадают.");
       }
 
