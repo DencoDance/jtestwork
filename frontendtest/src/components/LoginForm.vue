@@ -1,46 +1,29 @@
 <template>
-  <form class="loginForm" @submit="checkForm">
+  <form class="loginForm" @submit.prevent="login">
     <div class="form-group">
-      <div v-if="errors.length">
-        <b>Пожалуйста исправьте указанные ошибки:</b>
-        <ul>
-          <li v-for="error in errors" :key="error.id">{{ error }}</li>
-        </ul>
-      </div>
+      <user-email-input></user-email-input>
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
-          <label for="loginemail">
-            <span class>Email</span>
-          </label>
-        </div>
-        <div class="col-sm-12 col-md-8">
-          <input
-            placeholder="Your email"
-            id="loginemail"
-            class="form-control"
-            type="email"
-            v-model="email"
-            name="email"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-12 col-md-4 left">
-          <label for="loginpass">
+          <label for="userPassEntering">
             <span class>Password</span>
           </label>
         </div>
         <div class="col-sm-12 col-md-8">
           <input
             placeholder="Your password"
-            id="loginpass"
+            id="userPassEntering"
             class="form-control"
             type="password"
-            v-model="userPassword"
-            name="userPassword"
+            v-validate="'required|min:8'"
+            name="password"
+            v-model.lazy="user.password"
           />
+          <div
+            class="help-block alert alert-danger"
+            v-show="errors.has('password')"
+          >
+            {{ errors.first("password") }}
+          </div>
         </div>
       </div>
     </div>
@@ -51,30 +34,27 @@
 </template>
 
 <script>
+import UserEmailInput from "@/components/UserEmailInput.vue";
 export default {
   data() {
     return {
-      errors: [],
-      email: null,
-      userPassword: null
+      user: {
+        password: ""
+      }
     };
   },
-  methods: {
-    checkForm: function(e) {
-      if (this.email && this.userPassword) {
-        return true;
-      }
-      this.errors = [];
-
-      if (!this.email) {
-        this.errors.push("Требуется указать почтовый адрес.");
-      }
-
-      if (!this.userPassword) {
-        this.errors.push("Требуется указать пароль.");
-      }
-      e.preventDefault();
-    }
+  components: {
+    "user-email-input": UserEmailInput
   }
 };
+// methods: {
+//   login: function {
+//     this.$validator.validateAll().then(() => {
+//       this.$http.post('api/user', this.user)
+//       .then(Response => {
+//         this.$router.push()
+//       })
+//     })
+//   }
+// }
 </script>

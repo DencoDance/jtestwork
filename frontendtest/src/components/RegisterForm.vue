@@ -1,17 +1,10 @@
 <template>
-  <form class="loginForm" @submit="checkForm">
+  <form class="loginForm">
     <div class="form-group">
-      <div v-if="errors.length">
-        <b>Пожалуйста исправьте указанные ошибки:</b>
-        <ul>
-          <li v-for="error in errors" :key="error.id">{{ error }}</li>
-        </ul>
-      </div>
-
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
           <label for="loginfirstname">
-            <span class>Fistname</span>
+            <span class>Firstname</span>
           </label>
         </div>
         <div class="col-sm-12 col-md-8">
@@ -20,9 +13,16 @@
             id="loginfirstname"
             class="form-control"
             type="text"
-            v-model="firstName"
-            name="firstName"
+            name="Firstname"
+            v-validate="'required|alpha|min:3'"
+            v-model.lazy="user.Firstname"
           />
+          <div
+            class="help-block alert alert-danger"
+            v-show="errors.has('Firstname')"
+          >
+            {{ errors.first("Firstname") }}
+          </div>
         </div>
       </div>
     </div>
@@ -39,9 +39,16 @@
             id="loginlastname"
             class="form-control"
             type="text"
-            v-model="secondName"
-            name="secondName"
+            name="Lastname"
+            v-validate="'required|alpha|min:3'"
+            v-model.lazy="user.Lastname"
           />
+          <div
+            class="help-block alert alert-danger"
+            v-show="errors.has('Lastname')"
+          >
+            {{ errors.first("Lastname") }}
+          </div>
         </div>
       </div>
     </div>
@@ -49,79 +56,78 @@
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
           <label for="birthDate">
-            <span class>Date of Birth</span>
+            <span class>Age</span>
           </label>
         </div>
         <div class="col-sm-12 col-md-8">
           <input
             id="birthDate"
+            placeholder="22"
             class="form-control"
-            type="date"
-            v-model="age"
-            name="age"
-            min="0"
+            type="text"
+            name="Age"
+            v-validate="'required|numeric|min_value:16|max_value:100'"
+            v-model.lazy="user.Age"
           />
+          <div class="help-block alert alert-danger" v-show="errors.has('Age')">
+            {{ errors.first("Age") }}
+          </div>
         </div>
       </div>
     </div>
+    <user-email-input></user-email-input>
     <div class="form-group">
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
-          <label for="loginemail">
-            <span class>Email</span>
-          </label>
-        </div>
-        <div class="col-sm-12 col-md-8">
-          <input
-            placeholder="example@exaple.com"
-            id="loginemail"
-            class="form-control"
-            type="email"
-            v-model="email"
-            name="email"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-12 col-md-4 left">
-          <label for="loginphone">
+          <label for="loginPhone">
             <span class>Phone</span>
           </label>
         </div>
         <div class="col-sm-12 col-md-8">
           <input
-            placeholder="+38(090) 999 99 99"
-            id="loginphone"
+            placeholder="38 090 999 99 99"
+            id="loginPhone"
             class="form-control"
             type="tel"
-            v-model="userNumber"
-            name="userNumber"
+            name="phone"
+            v-validate="'required|numeric|min:4|max:16'"
+            v-model="user.phone"
           />
+          <div
+            class="help-block alert alert-danger"
+            v-show="errors.has('phone')"
+          >
+            {{ errors.first("phone") }}
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-12 col-md-4 left">
-          <label for="loginpass">
-            <span class>Password</span>
-          </label>
-        </div>
-        <div class="col-sm-12 col-md-8">
-          <input
-            placeholder="min 8 digits"
-            id="loginpass"
-            class="form-control"
-            type="password"
-            v-model="userPassword"
-            name="userPassword"
-          />
+    <div class="row">
+      <div class="col-sm-12 col-md-4 left">
+        <label for="userPass">
+          <span class>Password</span>
+        </label>
+      </div>
+      <div class="col-sm-12 col-md-8">
+        <input
+          placeholder="Your password"
+          id="userPass"
+          class="form-control"
+          type="password"
+          ref="password"
+          v-validate="'required|min:8'"
+          name="password"
+          v-model="user.password"
+        />
+        <div
+          v-show="errors.has('password')"
+          class="help-block alert alert-danger"
+        >
+          {{ errors.first("password") }}
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group mt-3">
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
           <label for="loginpass">
@@ -130,13 +136,20 @@
         </div>
         <div class="col-sm-12 col-md-8">
           <input
-            placeholder="min 8 digits"
+            placeholder="Password againe"
             id="loginpass"
             class="form-control"
             type="password"
-            v-model="userConfirmPassword"
-            name="userConfirmPassword"
+            v-validate="'required|confirmed:password'"
+            name="password_confirmation"
+            data-vv-as="password"
           />
+          <div
+            v-show="errors.has('password_confirmation')"
+            class="help-block alert alert-danger"
+          >
+            {{ errors.first("password_confirmation") }}
+          </div>
         </div>
       </div>
     </div>
@@ -147,58 +160,22 @@
 </template>
 
 <script>
+import UserEmailInput from "@/components/UserEmailInput.vue";
 export default {
   data() {
     return {
-      errors: [],
-      firstName: null,
-      secondName: null,
-      email: null,
-      userNumber: null,
-      userPassword: null,
-      userConfirmPassword: null
+      user: {
+        Firstname: "",
+        Lastname: "",
+        Age: "",
+        password: "",
+        phone: ""
+      }
     };
   },
-  methods: {
-    checkForm: function(e) {
-      if (
-        this.firstName &&
-        this.age &&
-        this.secondName &&
-        this.email &&
-        this.userNumber &&
-        this.userPassword &&
-        this.userPassword == this.userConfirmPassword
-      ) {
-        return true;
-      }
-
-      this.errors = [];
-
-      if (!this.firstName) {
-        this.errors.push("Требуется указать имя.");
-      }
-      if (!this.age) {
-        this.errors.push("Требуется указать возраст.");
-      }
-      if (!this.secondName) {
-        this.errors.push("Требуется указать фамилию.");
-      }
-      if (!this.email) {
-        this.errors.push("Требуется указать почтовый адрес.");
-      }
-      if (!this.userNumber) {
-        this.errors.push("Требуется указать номер телефона.");
-      }
-      if (!this.userPassword) {
-        this.errors.push("Требуется указать пароль.");
-      }
-      if (this.userPassword !== this.userConfirmPassword) {
-        this.errors.push("Пароли не совпадают.");
-      }
-
-      e.preventDefault();
-    }
+  components: {
+    "user-email-input": UserEmailInput
   }
 };
+// const MOBILEREG = /^((1[3578][0-9])+\d{8})$/;
 </script>
