@@ -1,7 +1,30 @@
 <template>
-  <form class="loginForm" @submit.prevent="login">
+  <form class="loginForm" @submit.prevent="$validator.validateAll()">
     <div class="form-group">
-      <user-email-input></user-email-input>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-12 col-md-4 left">
+            <label for="userEmail">
+              <span class>Email</span>
+            </label>
+          </div>
+          <div class="col-sm-12 col-md-8">
+            <input
+              placeholder="example@email.com"
+              id="userEmail"
+              class="form-control"
+              type="text"
+              name="email"
+              v-validate="'required|email'"
+              v-model="user.email"
+            >
+            <div
+              class="help-block alert alert-danger"
+              v-show="errors.has('email')"
+            >{{ errors.first("email") }}</div>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 left">
           <label for="userPassEntering">
@@ -16,14 +39,12 @@
             type="password"
             v-validate="'required|min:8'"
             name="password"
-            v-model.lazy="user.password"
-          />
+            v-model="user.password"
+          >
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('password')"
-          >
-            {{ errors.first("password") }}
-          </div>
+          >{{ errors.first("password") }}</div>
         </div>
       </div>
     </div>
@@ -34,27 +55,14 @@
 </template>
 
 <script>
-import UserEmailInput from "@/components/UserEmailInput.vue";
 export default {
   data() {
     return {
       user: {
-        password: ""
+        password: "",
+        email: ""
       }
     };
-  },
-  components: {
-    "user-email-input": UserEmailInput
   }
 };
-// methods: {
-//   login: function {
-//     this.$validator.validateAll().then(() => {
-//       this.$http.post('api/user', this.user)
-//       .then(Response => {
-//         this.$router.push()
-//       })
-//     })
-//   }
-// }
 </script>
