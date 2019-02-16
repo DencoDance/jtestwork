@@ -16,11 +16,13 @@
             name="Firstname"
             v-validate="'required|alpha|min:3'"
             v-model.lazy="user.Firstname"
-          >
+          />
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('Firstname')"
-          >{{ errors.first("Firstname") }}</div>
+          >
+            {{ errors.first("Firstname") }}
+          </div>
         </div>
       </div>
     </div>
@@ -40,11 +42,13 @@
             name="Lastname"
             v-validate="'required|alpha|min:3'"
             v-model.lazy="user.Lastname"
-          >
+          />
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('Lastname')"
-          >{{ errors.first("Lastname") }}</div>
+          >
+            {{ errors.first("Lastname") }}
+          </div>
         </div>
       </div>
     </div>
@@ -64,11 +68,10 @@
             name="Age"
             v-validate="'required|numeric|min_value:16|max_value:100'"
             v-model.lazy="user.Age"
-          >
-          <div
-            class="help-block alert alert-danger"
-            v-show="errors.has('Age')"
-          >{{ errors.first("Age") }}</div>
+          />
+          <div class="help-block alert alert-danger" v-show="errors.has('Age')">
+            {{ errors.first("Age") }}
+          </div>
         </div>
       </div>
     </div>
@@ -88,11 +91,13 @@
             name="email"
             v-validate="'required|email'"
             v-model="user.email"
-          >
+          />
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('email')"
-          >{{ errors.first("email") }}</div>
+          >
+            {{ errors.first("email") }}
+          </div>
         </div>
       </div>
     </div>
@@ -115,11 +120,13 @@
               regex: /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/
             }"
             v-model="user.phone"
-          >
+          />
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('phone')"
-          >{{ errors.first("phone") }}</div>
+          >
+            {{ errors.first("phone") }}
+          </div>
         </div>
       </div>
     </div>
@@ -139,11 +146,13 @@
           v-validate="'required|min:8'"
           name="password"
           v-model="user.password"
-        >
+        />
         <div
           v-show="errors.has('password')"
           class="help-block alert alert-danger"
-        >{{ errors.first("password") }}</div>
+        >
+          {{ errors.first("password") }}
+        </div>
       </div>
     </div>
     <div class="form-group mt-3">
@@ -162,16 +171,18 @@
             v-validate="'required|confirmed:password'"
             name="password_confirmation"
             data-vv-as="password"
-          >
+          />
           <div
             v-show="errors.has('password_confirmation')"
             class="help-block alert alert-danger"
-          >{{ errors.first("password_confirmation") }}</div>
+          >
+            {{ errors.first("password_confirmation") }}
+          </div>
         </div>
       </div>
     </div>
     <div class="button-group sdsd">
-      <input type="submit" class="btn btn-primary" value="Registration">
+      <input type="submit" class="btn btn-primary" value="Registration" />
     </div>
   </form>
 </template>

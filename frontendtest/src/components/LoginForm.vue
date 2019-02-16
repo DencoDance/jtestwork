@@ -17,11 +17,13 @@
               name="email"
               v-validate="'required|email'"
               v-model="user.email"
-            >
+            />
             <div
               class="help-block alert alert-danger"
               v-show="errors.has('email')"
-            >{{ errors.first("email") }}</div>
+            >
+              {{ errors.first("email") }}
+            </div>
           </div>
         </div>
       </div>
@@ -40,11 +42,13 @@
             v-validate="'required|min:8'"
             name="password"
             v-model="user.password"
-          >
+          />
           <div
             class="help-block alert alert-danger"
             v-show="errors.has('password')"
-          >{{ errors.first("password") }}</div>
+          >
+            {{ errors.first("password") }}
+          </div>
         </div>
       </div>
     </div>
